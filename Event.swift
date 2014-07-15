@@ -7,3 +7,14 @@
 //
 
 import Foundation
+
+class Event {
+    
+    init() {
+        
+    }
+    
+    func equals(event:Event) -> Bool {
+        return true
+    }
+}

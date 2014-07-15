@@ -7,3 +7,19 @@
 //
 
 import Foundation
+
+class Command {
+    
+    init() {
+        
+    }
+    
+    //Performs some given function.
+    func go() {
+        // do some stuff
+    }
+    
+    func equals(command:Command) -> Bool {
+        return true
+    }
+}

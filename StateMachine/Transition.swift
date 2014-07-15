@@ -7,3 +7,29 @@
 //
 
 import Foundation
+
+class Transition {
+    let event: Event
+    let state: State
+    
+    init(event:Event, state:State) {
+        self.event = event
+        self.state = state
+    }
+    
+    func getEvent() -> Event {
+        return self.event
+    }
+    
+    func getState() -> State {
+        return self.state
+    }
+    
+    func equals(transition:Transition) -> Bool {
+        if self.event.equals(transition.getEvent())
+            && self.state.equals(transition.getState()) {
+            return true
+        }
+        return false
+    }
+}

@@ -7,3 +7,16 @@
 //
 
 import Foundation
+import StateMachine
+
+class TimeSheetActions: Command {
+    
+    init() {
+        super.init()
+        //further initialization here.
+    }
+    
+    override func go()  {
+        //Some action stuff here.
+    }
+}
