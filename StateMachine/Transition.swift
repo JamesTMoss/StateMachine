@@ -11,10 +11,12 @@ import Foundation
 class Transition {
     let event: Event
     let state: State
+    let IDcode: String
     
-    init(event:Event, state:State) {
+    init(event:Event, state:State, IDcode:String) {
         self.event = event
         self.state = state
+        self.IDcode = IDcode
     }
     
     func getEvent() -> Event {
@@ -31,5 +33,9 @@ class Transition {
             return true
         }
         return false
+    }
+    
+    func toString() {
+        println("Event: \(event.toString()) transitions to: \(state.toString())")
     }
 }
