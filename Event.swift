@@ -10,11 +10,21 @@ import Foundation
 
 class Event {
     
+    let IDcode: String
+    
     init() {
-        
+        self.IDcode = "0000"
+    }
+    
+    init(IDcode: String) {
+        self.IDcode = IDcode
     }
     
     func equals(event:Event) -> Bool {
         return true
+    }
+    
+    func toString() {
+        print("\(IDcode)")
     }
 }

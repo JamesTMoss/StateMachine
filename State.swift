@@ -16,6 +16,7 @@ import Foundation
 class State {
     var actions: [Command] = []
     var transitions: [Transition] = []
+    var IDcode: String = "0000"
     
     init() {
     }
@@ -87,7 +88,7 @@ class State {
             }
         }
         let nilE: Event = Event()
-        let nilTransition: Transition = Transition(event: nilE, state: self)
+        let nilTransition: Transition = Transition(event: nilE, state: self, IDcode: "0000")
         return nilTransition
     }
     
@@ -121,7 +122,28 @@ class State {
         self.transitions.append(transition)
     }
     
+    func setIDcode(IDcode: String) {
+        self.IDcode = IDcode
+    }
+    
     func equals(state:State) -> Bool {
         return true
+    }
+    
+    //Test Functions
+    func printActions() {
+        for i in 0..<actions.count {
+            println("\(i):   \(actions[i].toString())")
+        }
+    }
+    
+    func printTransitions() {
+        for i in 0..<transitions.count {
+            println("\(i):   \(transitions[i].toString())")
+        }
+    }
+    
+    func toString() {
+        print("\(IDcode)")
     }
 }

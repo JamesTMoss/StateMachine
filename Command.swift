@@ -10,10 +10,16 @@ import Foundation
 
 class Command {
     
+    let IDcode: String
+    
     init() {
-        
+        self.IDcode = "0000"
     }
     
+    init(IDcode: String) {
+        self.IDcode = IDcode
+    }
+
     //Performs some given function.
     func go() {
         // do some stuff
@@ -21,5 +27,9 @@ class Command {
     
     func equals(command:Command) -> Bool {
         return true
+    }
+    
+    func toString() {
+        print("\(IDcode)")
     }
 }
