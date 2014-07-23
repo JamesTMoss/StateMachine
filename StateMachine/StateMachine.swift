@@ -23,7 +23,7 @@ class StateMachine {
         self.currentState = states[0]
     }
     
-    init (states:[State]) {
+    init (states:State...) {
         for state in states {
             self.states.append(state)
         }
@@ -32,15 +32,24 @@ class StateMachine {
     
     //Transition to new state based on a fired event.
     func transition(event:Event) {
-        if currentState.hasTransition(event) {
-            self.currentState = self.currentState.getTransition(event).getState()
+        if currentState.hasTransition(event.IDcode) {
+            currentState = currentState.getTransition(event.IDcode)
+        } else {
+            println("Can not perform transition")
         }
     }
     
     //activates the primary function of a state command.
     func performAction(action:Command) {
-        if currentState.hasAction(action) {
+        if currentState.hasAction(action.IDcode) {
             action.go()
+        } else {
+            println("Can not perform Action")
         }
+    }
+    
+    func printCurrentState() {
+        currentState.printActions()
+        currentState.printTransitions()
     }
 }

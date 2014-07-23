@@ -15,101 +15,61 @@ import Foundation
 
 class State {
     var actions: [Command] = []
-    var transitions: [Transition] = []
-    var IDcode: String = "0000"
+    let IDcode: String
+    typealias Transition = [String: State]
+    var transitions: Transition = Transition()
     
-    init() {
-    }
-    
-    init(action:Command) {
-        self.actions.append(action)
-    }
-    
-    init(actions:[Command]) {
-        for action in actions {
-            self.actions.append(action)
-        }
-    }
-    
-    init(transition:Transition) {
-        self.transitions.append(transition)
-    }
-    
-    init(transitions:[Transition]) {
-        for transition in transitions {
-            self.transitions.append(transition)
-        }
-    }
-    
-    init(action:Command, transition:Transition) {
-        self.actions.append(action)
-        self.transitions.append(transition)
-    }
-    
-    init (actions:[Command], transitions:[Transition]) {
-        for action in actions {
-            self.actions.append(action)
-        }
-        for transition in transitions {
-            self.transitions.append(transition)
-        }
-    }
-    
-    init (actions:[Command], transition:Transition) {
-        for action in actions {
-            self.actions.append(action)
-        }
-        self.transitions.append(transition)
-    }
-    
-    init (action:Command, transitions:[Transition]) {
-        self.actions.append(action)
-        for transition in transitions {
-            self.transitions.append(transition)
-        }
+    init(id: String = "0000", actions:Command...) {
+        self.IDcode = id
+        self.actions = actions
     }
     
     func getActions() -> [Command] {
-        return actions
+        return self.actions
     }
     
-    func getAction(index:Int) -> Command {
-        return actions[index]
-    }
-    
-    func getTransitions() -> [Transition] {
-        return transitions
-    }
-    
-    func getTransition(event:Event) -> Transition {
-        for i in 0..<transitions.count {
-            if transitions[i].getEvent().equals(event) {
-                return transitions[i]
+    func getAction(id:String) -> Command {
+        if hasAction(id) {
+            for action in getActions() {
+                if id == action.IDcode { return action }
             }
         }
-        let nilE: Event = Event()
-        let nilTransition: Transition = Transition(event: nilE, state: self, IDcode: "0000")
-        return nilTransition
+        return Command(IDcode: "NULL")
     }
     
     //Returns true if state possess action
-    func hasAction(act: Command) -> Bool {
-        for action in self.actions {
-            if act.equals(action) {
+    func hasAction(id: String) -> Bool {
+        for action in getActions() {
+            if action.equals(action) {
                 return true
             }
         }
         return false
     }
     
+    func getTransitions() -> Transition {
+        return transitions
+    }
+    
+    func getTransition(key:String) -> State {
+        for event in transitions.keys {
+            if event == key { return transitions[key]! }
+        }
+        return State(id: "null", actions: Command(IDcode: "Null"))
+    }
+    
     //Returns true if state possess transition (based on event, cannot have two transitions in a state with the same event)
-    func hasTransition(event: Event) -> Bool {
-        for transition in self.transitions {
-            if transition.getEvent().equals(event) {
-                return true
-            }
+    func hasTransition(key: String) -> Bool {
+        for event in getTransitions().keys {
+            if event == key { return true }
         }
         return false
+    }
+    
+    func setTransition(event:Event, state:State) {
+        if !hasTransition(event.IDcode) {
+            transitions[event.IDcode] = state
+        }
     }
     
     //Adds a new command to state.
@@ -117,17 +77,15 @@ class State {
         self.actions.append(action)
     }
     
-    //Adds a new transition to state.
-    func addTransition(transition:Transition) {
-        self.transitions.append(transition)
-    }
-    
-    func setIDcode(IDcode: String) {
-        self.IDcode = IDcode
+    func getIDcode() -> String {
+        return self.IDcode
     }
     
     func equals(state:State) -> Bool {
-        return true
+        if state.IDcode == self.IDcode {
+            return true;
+        }
+        return false
     }
     
     //Test Functions
@@ -138,12 +96,13 @@ class State {
     }
     
     func printTransitions() {
-        for i in 0..<transitions.count {
-            println("\(i):   \(transitions[i].toString())")
+        for key in getTransitions().keys {
+            let state = transitions[key]
+            println("\(key):   \(state?.toString())")
         }
     }
     
     func toString() {
-        print("\(IDcode)")
+        print("\(self.IDcode)")
     }
 }

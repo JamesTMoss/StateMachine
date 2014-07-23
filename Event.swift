@@ -12,16 +12,12 @@ class Event {
     
     let IDcode: String
     
-    init() {
-        self.IDcode = "0000"
-    }
-    
-    init(IDcode: String) {
+    init(IDcode: String = "0000") {
         self.IDcode = IDcode
     }
     
     func equals(event:Event) -> Bool {
-        return true
+        return event.IDcode == self.IDcode
     }
     
     func toString() {

@@ -21,12 +21,12 @@ class Command {
     }
 
     //Performs some given function.
-    func go() {
-        // do some stuff
+    func go() -> Bool {
+        return true
     }
     
     func equals(command:Command) -> Bool {
-        return true
+        return self.IDcode == command.IDcode
     }
     
     func toString() {

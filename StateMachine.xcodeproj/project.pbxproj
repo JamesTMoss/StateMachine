@@ -15,7 +15,8 @@
 		D2225C9C1974F40D00E89A5C /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2225C9B1974F40D00E89A5C /* Command.swift */; };
 		D2225C9E1974F47800E89A5C /* StateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2225C9D1974F47800E89A5C /* StateMachine.swift */; };
 		D2225CA01974F4CE00E89A5C /* TimeSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2225C9F1974F4CE00E89A5C /* TimeSheet.swift */; };
-		D2225CA21974F90600E89A5C /* Transition.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2225CA11974F90600E89A5C /* Transition.swift */; };
+		D2662101197CA10300CBD6F8 /* TimeClock.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2662100197CA10300CBD6F8 /* TimeClock.swift */; };
+		D2662103197CA25500CBD6F8 /* Staff.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2662102197CA25500CBD6F8 /* Staff.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,7 +41,8 @@
 		D2225C9B1974F40D00E89A5C /* Command.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Command.swift; path = ../Command.swift; sourceTree = "<group>"; };
 		D2225C9D1974F47800E89A5C /* StateMachine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StateMachine.swift; sourceTree = "<group>"; };
 		D2225C9F1974F4CE00E89A5C /* TimeSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeSheet.swift; sourceTree = "<group>"; };
-		D2225CA11974F90600E89A5C /* Transition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Transition.swift; sourceTree = "<group>"; };
+		D2662100197CA10300CBD6F8 /* TimeClock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeClock.swift; sourceTree = "<group>"; };
+		D2662102197CA25500CBD6F8 /* Staff.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Staff.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +67,7 @@
 		D2225C6F19740EF900E89A5C = {
 			isa = PBXGroup;
 			children = (
+				D26620FF197CA0CF00CBD6F8 /* Semantic Model */,
 				D2225C7B19740EF900E89A5C /* StateMachine */,
 				D2225C8819740EF900E89A5C /* StateMachineTests */,
 				D2225C7A19740EF900E89A5C /* Products */,
@@ -86,7 +89,6 @@
 				D2225C9F1974F4CE00E89A5C /* TimeSheet.swift */,
 				D2225C9519740F3500E89A5C /* State.swift */,
 				D2225C991974F3FF00E89A5C /* Event.swift */,
-				D2225CA11974F90600E89A5C /* Transition.swift */,
 				D2225C9B1974F40D00E89A5C /* Command.swift */,
 				D2225C9D1974F47800E89A5C /* StateMachine.swift */,
 				D2225C7E19740EF900E89A5C /* StateMachine.h */,
@@ -118,6 +120,15 @@
 				D2225C8A19740EF900E89A5C /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		D26620FF197CA0CF00CBD6F8 /* Semantic Model */ = {
+			isa = PBXGroup;
+			children = (
+				D2662100197CA10300CBD6F8 /* TimeClock.swift */,
+				D2662102197CA25500CBD6F8 /* Staff.swift */,
+			);
+			name = "Semantic Model";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -228,8 +239,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D2225CA21974F90600E89A5C /* Transition.swift in Sources */,
 				D2225C9A1974F3FF00E89A5C /* Event.swift in Sources */,
+				D2662103197CA25500CBD6F8 /* Staff.swift in Sources */,
+				D2662101197CA10300CBD6F8 /* TimeClock.swift in Sources */,
 				D2225C9619740F3500E89A5C /* State.swift in Sources */,
 				D2225C9E1974F47800E89A5C /* StateMachine.swift in Sources */,
 				D2225CA01974F4CE00E89A5C /* TimeSheet.swift in Sources */,

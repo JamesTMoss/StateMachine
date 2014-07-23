@@ -11,41 +11,34 @@
 //
 
 import Foundation
-import StateMachine
 
 class TimeSheet {
-    let arrive, depart: Event
-    let record, finalise, flag, adjustTimeStamp: Command
-    let signedIn, signedOut: State
-    let signOn, signOff: Transition
+    let signIn:Event            = Event(IDcode:"SGNI")
+    let signOut:Event           = Event(IDcode: "SGNO")
+    let approve:Event           = Event(IDcode: "APPR")
+    let record:Command          = Command(IDcode: "RCRD")
+    let finalise:Command        = Command(IDcode: "FINL")
+    let flag:Command            = Command(IDcode: "FLAG")
+    let adjustTimeStamp:Command = Command(IDcode: "ADJT")
+    let signedIn, signedOut, pendingApproval :State
     let stateMachine: StateMachine
     
     init() {
-        //Initialize all Events & Commands.
-        arrive = Event(IDcode: "ARIV")   ; depart          = Event(IDcode: "DPRT");
-        record = Command(IDcode: "RCRD") ; finalise        = Command(IDcode: "FINL") ;
-        flag   = Command(IDcode: "FLAG") ; adjustTimeStamp = Command(IDcode: "ADJT");
-        
         //Initialize all States and Transitions.
-        signedIn    = State(actions: [record, flag, adjustTimeStamp])
-        signedOut   = State(actions: [record, finalise, adjustTimeStamp])
-        signOn      = Transition(event: arrive, state: signedIn, IDcode: "SGNON")
-        signOff     = Transition(event: depart, state: signedOut, IDcode: "SGNOFF")
-        signedIn.addTransition(signOff)
-        signedOut.addTransition(signOn)
+        signedIn        = State(id: "SIGNIN",  actions: record, flag, adjustTimeStamp)
+        signedOut       = State(id: "SIGNOUT", actions: record, finalise, adjustTimeStamp)
+        pendingApproval = State(id: "PENDAPP", actions: finalise)
+        signedIn        .setTransition(signOut, state: pendingApproval)
+        signedOut       .setTransition(signIn, state: signedIn)
+        pendingApproval .setTransition(approve, state: signedOut)
         
         //Initialize state machine with all states.
-        stateMachine = StateMachine(states: [signedIn, signedOut])
+        stateMachine = StateMachine(states: signedIn, signedOut, pendingApproval)
         stateMachine.currentState = signedOut
     }
     
-    func fireEvent(event:Event) {
-        stateMachine.transition(event)
+    func getStateMachine() -> StateMachine {
+        return stateMachine
     }
-    
-    func fireCommand(command:Command) {
-        stateMachine.performAction(command)
-    }
-    
 }
 
