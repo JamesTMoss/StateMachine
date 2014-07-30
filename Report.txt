@@ -30,9 +30,9 @@ Several styles of programming, or forms of programming, exist that represent a d
 	Looking at the different approaches to declarative programming, and the different uses it has, I decided to invest the time in looking into Domain Specific Languages (DSL's) and whether or not it was possible to write a DSL in swift using a declarative syntax. A DSL is a computer programming language of limited expressivness focused on a particular domain. In particular a DSL focuses 'limited expressivness', where a general purpose programming language provides lots of capabilities: supporting varied data, control, and abstraction structures. All of this is useful but makes it harder to learn and use. A DSL supports a bare minimum of features needed to support its domain. In otherwords, you can use DSL's to help build a system, or to give your system the definition of what you want the results to be, but not how you wish to gain these results.
 	Reading through Martin Fowlers 'Domain Specific Languages' he gave a clear distinguishment of the difference between internal and external DSL's, and from this point onwards and reference to DSL's (unless specified) will be to internal DSL's. Specifically a internal DSL is a particular way of using a general purpose language. A script in an internal DSL is valid code in its general purpose language, but only uses a subset of the languages features in a particular style to handle one small aspect of the overall system. The result should have the feel of a custom language, rather than its host langauge. It is with this concept in mind that we seek to write code in Swift to discover the limits of how we can create an internal DSL, or in otherwords, does swift allow for declarative programming, or enough declarative programming to gain a result similar to examples from other languages such as Ruby.
 	Martin Fowler presents a strong example of a State Machine, and how this can be written with an internal DSL. To test the limits of declarative programming with Swift I have created a State Machine, although, with a different domain. 
-	The problem domain is the signing in and out of an activity using a time sheet:
+	The task that I have set is to write a Domain Specific Language for the configuration of a State Machine. The domain of this state machine is the application of Time Sheets. This is a similar problem that Martin Flowler deals with, and the solution is present in the same manner as his in showing the process in making code, and syntax, as declarative as possible, and looking more like a custom syntax then the actual language we are programming with. Below is a state diagram representing the problem, and showing how this problem can be solved using a state machine in the first place!
 	
-	![alt text][diagram]
+	![alt text](https://github.com/JamesTMoss/StateMachine/blob/master/diagram)
 	
 	The below example is written with Java:
 	''' java
@@ -91,32 +91,38 @@ Several styles of programming, or forms of programming, exist that represent a d
 	So we have something here we like the looks of. It is simple, readable, and is of limited expressivness. This is a DSL based on a time sheet state machine.
 	
 ### A Swift Solution
-	Now that we have seen one other version of how this code can be implemented, in quite a declarative way with limited expressiveness and high readability, let's see if we can create something similar with swift.
-	There are a few ways to approach this solution, the easiest is with simple class method calls, which will turn out something like the original java code above. This is what i began with to create a base from which i could begin to remove as many side effects and limit its expressivness to the point of either a similar solution that JRuby can achieve, or perhaps even further.
+	Now that we have seen one other version of how this code can be implemented, in quite a declarative way with limited expressiveness and high readability, let's see if we can create something similar with Swift. Again the problem domain is a DSL representing the configuration of a State Machine.
+	There are a few ways to approach this solution, the easiest is with simple object method calls, which will turn out something like the original java code above. This is what I began with to create a base from which I could begin to remove as many side effects and limit its expressivness to the point of either a similar solution that JRuby can achieve, or perhaps even further.
+	
 	''' swift
-	let arrive, depart: Event
+	let arrive, depart, approve: Event
 	let record, finalise, flag, adjustTimeStamp: TimeSheetActions
-	let signedIn, signedOut: State
-	let signOn, signOff: Transition
+	let signedIn, signedOut, pendingApproval: State
 	let stateMachine: StateMachine
 	    
 	init() {
-		arrive = Event()            ; depart          = Event()
-		record = TimeSheetActions() ; finalise        = TimeSheetActions() 
+		arrive =  Event()           ; depart          = Event()
+		approve = Event()
+		record = TimeSheetActions() ; finalize        = TimeSheetActions() 
 	    flag   = TimeSheetActions() ; adjustTimeStamp = TimeSheetActions()
 	 
-	 	signedIn    = State(actions: [record, flag, adjustTimeStamp])
-	 	signedOut   = State(actions: [record, finalise, adjustTimeStamp])
-	 	signOn      = Transition(event: arrive, state: signedIn)
-	 	signOff     = Transition(event: depart, state: signedOut)
+	 	signedIn    	= State(actions: [record, flag, adjustTimeStamp])
+	 	signedOut   	= State(actions: [record, adjustTimeStamp])
+		pendingApproval = State(actions: [finalize])
+	 	let signOn      = Transition(event: arrive,  state: signedIn)
+	 	let signOff     = Transition(event: depart,  state: pendingApproval)
+		let approval 	= Transition(event: approve, state: signedOut)
 	 	signedIn.addTransition(signOff)
-	 	ignedOut.addTransition(signOn)
+	 	signedOut.addTransition(signOn)
+		pendingApproval.addTransition(approval)
 	 	
-		stateMachine = StateMachine(states: [signedIn, signedOut])
+		stateMachine = StateMachine(states: [signedIn, signedOut, pendingApproval])
 	 	stateMachine.currentState = signedOut
 	 }
 	 '''
-	 This looks a little better than the java code, but it still is'nt enough, it still does not look like a state machine. I decided to pursue the use of enumurations, and see how easily Swift allows you to implement them, and how powerful they are within this language.
+	 
+	 This looks a little better than the java code, but it still is'nt enough, it still does not look like a state machine. Each of the objects need to be declared and instantiated, which is not a very declarative at all. In this solution each of the states are instantiated with a set of actions that it can perform. Then the transitions are declared and intantiated using the events and states previously instantiated. Then these transitions are added to the states, with the states finally being added into the state machine, while also setting the initial state for it to start in. To try and create a more declarative solution we must try to remove the object declarations. 
+	 I decided to pursue the use of enumurations, and see how easily Swift allows you to implement them, and how powerful they are within this language. One of the reasons for choosing this method is that you can very easily set predefined values and constants using them. With Swift what this allows is to pass in types of enums given a set of value Types (ie. String, Int, enum) and distinguish them from any other set of values. In the instance below you can see the enum 'Config' and how it has set up the particualar value types for each case.
 	 
 	 ''' swift
 	 enum Config {
@@ -142,7 +148,41 @@ Several styles of programming, or forms of programming, exist that represent a d
 	 }
 	 '''
 
-	 Above you can see the use of an Enum to create a custom syntax for configuration code. Below this is the initialization of a State Machine with this configuration code. As you can see it is very readable, and looks much more like a state machine. I believe that this may even achieve a greater result then the use of JRuby, making this particlar example a very declarative solution to the original problem, and also greatly reducing its side effects.
+	 This use of enums have allowed us to create what looks like a custom syntax for configuration code. As you can see it is very readable, and looks much more like a DSL. However this is only the front end of the DSL, this is the language we have created to allow for very easy instantiation of a StateMachine. Below is some of the code that reads in the information passed into the StateMachine, and uses the enum to instantiate and create the actual objects from simple user input data.
+	 
+	 ''' swift
+	 init(StateMachineConfiguration: [Config]) {
+	        for transition in StateMachineConfiguration {
+	             switch transition{
+	             case .Transition(let startState, let endState, let event):
+	                 var startName, endName, eventName: String
+	                 switch startState{
+	                 case .State(let stateName, let Actions):
+	                     self.addState(startState)
+	                     startName = stateName
+	                 }
+	                 switch endState{
+	                 case .State(let stateName, let Actions):
+	                     self.addState(endState)
+	                     endName = stateName
+	                 }
+                
+	                 switch event {
+	                 case .Event(let eventID):
+	                     var newEvent = true
+	                     eventName = eventID
+	                     for e in events { if eventID == e.IDcode { newEvent = false} }
+	                     if newEvent {
+	                         events.append(Event(IDcode: eventID))
+	                     }
+	                 }
+	                 self.getState(startName)!.setTransition(self.getEvent(eventName)!, state: self.getState(endName)!)
+	             }
+	         }
+	     }
+	 '''
+	 
+	 In the above code you can see how the use of the enums has allowed us to seperate easily the information provided in the initial configuration and then instantiate the objects. This particular block of code also checks to see if any repeat data has been put in so it does not create multiples of the objects. This method of using the enums has allowed us to write a custom syntax for our DSL, and a 'fake' parsing of the data to generate the code. For both users and programmers it is easy to read the syntax, and write in it, with very little side effects present. So this final solution feels far more declarative then our original swift attempt.
 	 
 	 
 ### Conclusion
