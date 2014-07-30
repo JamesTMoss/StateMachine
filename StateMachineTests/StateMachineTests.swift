@@ -30,15 +30,15 @@ class StateMachineTests: XCTestCase {
         sm.printCurrentState()
         XCTAssertTrue(sm.currentState.equals(ts.signedOut), "Should have started in the signed out state")
         
-        sm.transition(ts.signIn)
+        sm.transition("signIn")
         sm.printCurrentState()
         XCTAssertTrue(sm.currentState.equals(ts.signedIn), "Should have transitioned to signed in state")
         
-        sm.transition(ts.signOut)
+        sm.transition("signOut")
         sm.printCurrentState()
         XCTAssertTrue(sm.currentState.equals(ts.pendingApproval), "Should have transitioned to pending approval state")
 
-        sm.transition(ts.approve)
+        sm.transition("approve")
         sm.printCurrentState()
         XCTAssertTrue(sm.currentState.equals(ts.signedOut), "Should have transitioned to signed out state")
     }
@@ -51,7 +51,7 @@ class StateMachineTests: XCTestCase {
         sm.printCurrentState()
         XCTAssertTrue(sm.currentState.equals(ts.signedOut), "Should have started in the signed out state.")
         
-        sm.transition(ts.approve)
+        sm.transition("approve")
         sm.printCurrentState()
         XCTAssertFalse(sm.currentState.equals(ts.pendingApproval), "Should not have been able to transition to the pending approval state")
         XCTAssertTrue(sm.currentState.equals(ts.signedOut), "Should still be in the signed out State")

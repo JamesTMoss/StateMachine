@@ -13,30 +13,20 @@
 import Foundation
 
 class TimeSheet {
-    let signIn:Event            = Event(IDcode:"SGNI")
-    let signOut:Event           = Event(IDcode: "SGNO")
-    let approve:Event           = Event(IDcode: "APPR")
-    let record:Command          = Command(IDcode: "RCRD")
-    let finalise:Command        = Command(IDcode: "FINL")
-    let flag:Command            = Command(IDcode: "FLAG")
-    let adjustTimeStamp:Command = Command(IDcode: "ADJT")
-    let signedIn, signedOut, pendingApproval :State
     let stateMachine: StateMachine
-    
     init() {
-        //Initialize all States and Transitions.
-        signedIn        = State(id: "SIGNIN",  actions: record, flag, adjustTimeStamp)
-        signedOut       = State(id: "SIGNOUT", actions: record, finalise, adjustTimeStamp)
-        pendingApproval = State(id: "PENDAPP", actions: finalise)
-        signedIn        .setTransition(signOut, state: pendingApproval)
-        signedOut       .setTransition(signIn, state: signedIn)
-        pendingApproval .setTransition(approve, state: signedOut)
-        
-        //Initialize state machine with all states.
-        stateMachine = StateMachine(states: signedIn, signedOut, pendingApproval)
-        stateMachine.currentState = signedOut
+        stateMachine = StateMachine(StateMachineConfiguration: [
+            Config.Transition(Config.State("signedIn",        Config.Actions(["record", "flag", "adjustTimeStamp"])),
+                              Config.State("pendingApproval", Config.Actions(["finalise"])),
+                              Config.Event("signOut")),
+            Config.Transition(Config.State("signedOut",       Config.Actions(["record", "finalise", "adjustTimeStamp"])),
+                              Config.State("signedIn",        Config.Actions([])),
+                              Config.Event("signIn")),
+            Config.Transition(Config.State("pendingApproval", Config.Actions([])),
+                              Config.State("signedOut",       Config.Actions([])),
+                              Config.Event("approve"))])
     }
-    
+
     func getStateMachine() -> StateMachine {
         return stateMachine
     }

@@ -16,10 +16,13 @@ import Foundation
 class State {
     var actions: [Command] = []
     let IDcode: String
-    typealias Transition = [String: State]
-    var transitions: Transition = Transition()
+    typealias Transitions = [String: State]
+    var transitions: Transitions = Transitions()
     
-    init(id: String = "0000", actions:Command...) {
+    init(id: String = "0000") {
+        self.IDcode = id
+    }
+    init(id: String = "0000", actions:[Command]) {
         self.IDcode = id
         self.actions = actions
     }
@@ -47,15 +50,15 @@ class State {
         return false
     }
     
-    func getTransitions() -> Transition {
+    func getTransitions() -> Transitions {
         return transitions
     }
     
-    func getTransition(key:String) -> State {
-        for event in transitions.keys {
-            if event == key { return transitions[key]! }
+    func getTransition(id: String) -> State {
+        for transition in transitions {
+            if transition.0 == id { return transition.1 }
         }
-        return State(id: "null", actions: Command(IDcode: "Null"))
+        return self
     }
     
     //Returns true if state possess transition (based on event, cannot have two transitions in a state with the same event)
@@ -91,14 +94,14 @@ class State {
     //Test Functions
     func printActions() {
         for i in 0..<actions.count {
-            println("\(i):   \(actions[i].toString())")
+            print("\(i):   \(actions[i].toString()), ")
         }
     }
     
     func printTransitions() {
         for key in getTransitions().keys {
             let state = transitions[key]
-            println("\(key):   \(state?.toString())")
+            print("\(key):   \(state?.toString()), ")
         }
     }
     

@@ -21,8 +21,8 @@ class Command {
     }
 
     //Performs some given function.
-    func go() -> Bool {
-        return true
+    func go()  {
+        
     }
     
     func equals(command:Command) -> Bool {

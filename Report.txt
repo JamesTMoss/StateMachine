@@ -1,0 +1,152 @@
+# Modern Declarative Programming
+## A Swift Conclusion
+///
+	Declarative programming can be described as a pradigm, a style of building the structure and elements of computer programs, that expresses the logic of a computation without describing its control flow. Many languages applying this style attempt to minimize or eliminate side effects by describing what the program should accomplish in terms of the problem domain, rather than describing how to go about accomplishing it as a sequence of the programming language primitives. 
+	
+Several styles of programming, or forms of programming, exist that represent a declarative solution.
+	- Constant programming: Relations between variables are stated in the form of constraints, specifying the properties of a solution to be found.
+	- Domain Specific Languages: This is a computer language specialized to a particular application domain. This can take the form of either internal or external DSL's and therefor 		implemented with a wide variety of computing languages.
+	- Functional programming: This attempts to minimize of eliminate side effects.
+	- Hybrid languages: These specify dependencies in a declarative fashion, but include imperative lists of actions to take as well. 
+	- Logic programming: The specifics of how queries are answered is up to the implementation and its theorm prover. It typically takes the form of some sort of unification.
+	
+	NOTE: Counter to declarative programming is imperative programming, where algorithms are implemented in terms of explicit steps. This is important to note as any declarative solution must avoid this implementation in their code for it to be truly declarative. 
+	
+
+### Introduction to Swift
+	Swift is a new programming language for IOS and OS X introduced at Apples WWDC 2014 in June.. It was designed/created by Chris Lattner and has already been dubbed with many comparisons. Such as 'Objective-C without C' and 'Rusty Objective-C#++', it most certainly adopts the readability of Objective-C's named parameters and thr power of Objective-C's dynamic object model. Iy also provides seamless access to existing Cocoa frameworks and mix-and-match interoperability with Objective-C code.
+	It is a Strongly typed language that adopts safe programming patterns and adds modern features to make programming easier, more flexible, and more fun. It is a industrial-quality systems programming language that is as expressive and enjoyable as a scripting language. Some important features that allow for the possibility of adapting a declarative programming style are the following:
+	- Type inference & explicitly mutable/immutable variables
+	- Generics
+	- Operator Overloading
+	- Classes/Reference Types (objects) & Value Types (structs, enums)
+	- Tuples
+	- Type extension
+	- Optional Types
+	- Pattern Matching
+	
+	
+### Declaring the problem
+	Looking at the different approaches to declarative programming, and the different uses it has, I decided to invest the time in looking into Domain Specific Languages (DSL's) and whether or not it was possible to write a DSL in swift using a declarative syntax. A DSL is a computer programming language of limited expressivness focused on a particular domain. In particular a DSL focuses 'limited expressivness', where a general purpose programming language provides lots of capabilities: supporting varied data, control, and abstraction structures. All of this is useful but makes it harder to learn and use. A DSL supports a bare minimum of features needed to support its domain. In otherwords, you can use DSL's to help build a system, or to give your system the definition of what you want the results to be, but not how you wish to gain these results.
+	Reading through Martin Fowlers 'Domain Specific Languages' he gave a clear distinguishment of the difference between internal and external DSL's, and from this point onwards and reference to DSL's (unless specified) will be to internal DSL's. Specifically a internal DSL is a particular way of using a general purpose language. A script in an internal DSL is valid code in its general purpose language, but only uses a subset of the languages features in a particular style to handle one small aspect of the overall system. The result should have the feel of a custom language, rather than its host langauge. It is with this concept in mind that we seek to write code in Swift to discover the limits of how we can create an internal DSL, or in otherwords, does swift allow for declarative programming, or enough declarative programming to gain a result similar to examples from other languages such as Ruby.
+	Martin Fowler presents a strong example of a State Machine, and how this can be written with an internal DSL. To test the limits of declarative programming with Swift I have created a State Machine, although, with a different domain. 
+	The problem domain is the signing in and out of an activity using a time sheet:
+	
+	![alt text][diagram]
+	
+	The below example is written with Java:
+	''' java
+	Event signOut = new Event("SGNOUT");
+	Event signIn = new Event("SGNIN");
+	Event approve = new Event("APPRV");
+	
+	Command flag = new Command("FLAG");
+	Command record = new Command("RCRD");
+	Command adjustTimeStamp = new Command("ADJTS");
+	Command finalize = new Command("FNLZ");
+	
+	State signedIn = new State("Signed In");
+	State signedOut = new State("Signed Out");
+	State pendingApproval = new State("Pending Approval");
+	
+	StateMachine machine = new StateMachine(signedOut);
+	signedOut.addTransition(signIn, signedIn);
+	signedOut.addAction(record);
+	signedOut.addAction(adjustTimeStamp);
+	signedIn.addTransition(signOut, pendingApproval);
+	signedIn.addAction(record);
+	signedIn.addAction(flag);
+	signedIn.addAction(adjustTimeStamp);
+	pendingApproval.addTransition(approve, signedOut);
+	pendingApproval.addAction(finalize);
+	'''
+	
+	This does not really represent a Declarative State Machine DSL, in fact it is hard to tell it is a state machine. JRuby Allows for a more readable looking state machine. It also is far more declarative then pure java.
+	''' ruby
+	event :signOut, "SGNOUT"
+	event :signIn, "SGNIN"
+	event :approve, "APPRV"
+	
+	command :flag, "FLAG"
+	command :record, "RCRD"
+	command :adjustTimeStamp, "ADJTS"
+	command :finalize, "FNLZ"
+	
+	state :signedIn do
+		actions :record, :adjustTimeStamp, :flag
+		transitions :signOut -> :pendingApproval
+	end
+	
+	state :signedOut do
+		actions :record, :adjustTimeStamp
+		transitions :signIn -> :signedIn
+	end
+	
+	state :pendingApproval do
+		actions :finalize
+		transitions :approve -> :signedOut
+	end
+	'''
+	
+	So we have something here we like the looks of. It is simple, readable, and is of limited expressivness. This is a DSL based on a time sheet state machine.
+	
+### A Swift Solution
+	Now that we have seen one other version of how this code can be implemented, in quite a declarative way with limited expressiveness and high readability, let's see if we can create something similar with swift.
+	There are a few ways to approach this solution, the easiest is with simple class method calls, which will turn out something like the original java code above. This is what i began with to create a base from which i could begin to remove as many side effects and limit its expressivness to the point of either a similar solution that JRuby can achieve, or perhaps even further.
+	''' swift
+	let arrive, depart: Event
+	let record, finalise, flag, adjustTimeStamp: TimeSheetActions
+	let signedIn, signedOut: State
+	let signOn, signOff: Transition
+	let stateMachine: StateMachine
+	    
+	init() {
+		arrive = Event()            ; depart          = Event()
+		record = TimeSheetActions() ; finalise        = TimeSheetActions() 
+	    flag   = TimeSheetActions() ; adjustTimeStamp = TimeSheetActions()
+	 
+	 	signedIn    = State(actions: [record, flag, adjustTimeStamp])
+	 	signedOut   = State(actions: [record, finalise, adjustTimeStamp])
+	 	signOn      = Transition(event: arrive, state: signedIn)
+	 	signOff     = Transition(event: depart, state: signedOut)
+	 	signedIn.addTransition(signOff)
+	 	ignedOut.addTransition(signOn)
+	 	
+		stateMachine = StateMachine(states: [signedIn, signedOut])
+	 	stateMachine.currentState = signedOut
+	 }
+	 '''
+	 This looks a little better than the java code, but it still is'nt enough, it still does not look like a state machine. I decided to pursue the use of enumurations, and see how easily Swift allows you to implement them, and how powerful they are within this language.
+	 
+	 ''' swift
+	 enum Config {
+	     case Transition(Config, Config, Config)
+	     case State(String, Config)
+	     case Event(String)
+	     case Actions([String])
+	 }
+	 
+	 let stateMachine: StateMachine
+	 init() {
+	     stateMachine = StateMachine(StateMachineConfiguration: [
+	             Config.Transition(Config.State("signedIn",        Config.Actions(["record", "flag", "adjustTimeStamp"])),
+	                               Config.State("pendingApproval", Config.Actions(["finalise"])),
+	                               Config.Event("signOut")),
+	             Config.Transition(Config.State("signedOut",       Config.Actions(["record", "finalise", "adjustTimeStamp"])),
+	                               Config.State("signedIn",        Config.Actions([])),
+	                               Config.Event("signIn")),
+	             Config.Transition(Config.State("pendingApproval", Config.Actions([])),
+	                               Config.State("signedOut",       Config.Actions([])),
+	                               Config.Event("approve"))
+		])
+	 }
+	 '''
+
+	 Above you can see the use of an Enum to create a custom syntax for configuration code. Below this is the initialization of a State Machine with this configuration code. As you can see it is very readable, and looks much more like a state machine. I believe that this may even achieve a greater result then the use of JRuby, making this particlar example a very declarative solution to the original problem, and also greatly reducing its side effects.
+	 
+	 
+### Conclusion
+
+
+
+### Footnotes
