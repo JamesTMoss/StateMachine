@@ -39,7 +39,7 @@ The task I have created is to generate a solution to a problem. The problem doma
 
 This is a similar problem that Martin Flowler deals with, and the solution is present in the same manner as his in showing the process in making code, and syntax, as declarative as possible, and looking more like a custom syntax then the actual language we are programming with. Below is a state diagram representing the problem, and showing how this problem can be solved using a state machine in the first place!
 	
-![alt text](https://github.com/JamesTMoss/StateMachine/blob/master/diagram)
+![ALT text](https://raw.githubusercontent.com/JamesTMoss/StateMachine/master/diagram.png)
 	
 The below example is written with Java:
     
