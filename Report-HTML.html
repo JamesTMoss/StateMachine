@@ -1,0 +1,179 @@
+<h1 id="modern-declarative-programming-a-swift-conclusion">Modern Declarative Programming - A Swift Conclusion</h1>
+<hr />
+<p>Declarative programming can be described as a paradigm, a style of building the structure and elements of computer programs, that expresses the logic of a computation without describing its control flow. Many languages applying this style attempt to minimize or eliminate side effects by describing what the program should accomplish in terms of the problem domain, rather than describing how to go about accomplishing it as a sequence of the programming language primitives. </p>
+<p>Several styles of programming, or forms of programming, exist that represent a declarative solution.</p>
+<ul>
+<li>Constraint programming: Relations between variables are stated in the form of constraints, specifying the properties of a solution to be found.</li>
+<li>Domain Specific Languages: This is a computer language specialized to a particular application domain. This can take the form of either internal or external DSL's and therefor        implemented with a wide variety of computing languages.</li>
+<li>Functional programming: This attempts to minimize of eliminate side effects.</li>
+<li>Hybrid languages: These specify dependencies in a declarative fashion, but include imperative lists of actions to take as well. </li>
+<li>Logic programming: The specifics of how queries are answered is up to the implementation and its theorem prover. It typically takes the form of some sort of unification.</li>
+</ul>
+<p>NOTE: Counter to declarative programming is imperative programming, where algorithms are implemented in terms of explicit steps. This is important to note as any declarative solution must avoid this implementation in their code for it to be truly declarative. </p>
+<h3 id="introduction-to-swift">Introduction to Swift</h3>
+<p>Swift is a new programming language for IOS and OS X introduced at Apples WWDC 2014 in June.. It was designed/created by Chris Lattner and has already been dubbed with many comparisons. Such as 'Objective-C without C' and 'Rusty Objective-C#++', it most certainly adopts the readability of Objective-C's named parameters and the power of Objective-C's dynamic object model. Iy also provides seamless access to existing Cocoa frameworks and mix-and-match interoperability with Objective-C code.</p>
+<p>It is a Strongly typed language that adopts safe programming patterns and adds modern features to make programming easier, more flexible, and more fun. It is a industrial-quality systems programming language that is as expressive and enjoyable as a scripting language. Some important features that allow for the ability to write in declarative programming style are the following:</p>
+<ul>
+<li>Type inference &amp; explicitly mutable/immutable variables</li>
+<li>Generics</li>
+<li>Operator Overloading</li>
+<li>Classes/Reference Types (objects) &amp; Value Types (structs, enums)</li>
+<li>Tuples</li>
+<li>Type extension</li>
+<li>Optional Types</li>
+<li>Pattern Matching</li>
+</ul>
+<h3 id="declaring-the-problem">Declaring the problem</h3>
+<p>Looking at the different approaches to declarative programming, and the different uses it has, I decided to invest the time in looking into Domain Specific Languages (DSL's) and whether or not it was possible to write a DSL in swift using a declarative syntax. The project of demonstrating this particular example in no way represents a generalised result across the other mediums of declarative programming.</p>
+<p>A DSL is a computer programming language of limited expressiveness focused on a particular domain. In particular a DSL focuses 'limited expressiveness', where a general purpose programming language provides lots of capabilities: supporting varied data, control, and abstraction structures. All of this is useful but makes it harder to learn and use. A DSL supports a bare minimum of features needed to support its domain. In other words, you can use DSL's to help build a system, or to give your system the definition of what you want the results to be, but not how you wish to gain these results.</p>
+<p>Reading through Martin Fowlers 'Domain Specific Languages' he gave a clear distinguishment of the difference between internal and external DSL's, and from this point onwards and reference to DSL's (unless specified) will be to internal DSL's. Specifically a internal DSL is a particular way of using a general purpose language. A script in an internal DSL is valid code in its general purpose language, but only uses a subset of the languages features in a particular style to handle one small aspect of the overall system. The result should have the feel of a custom language, rather than its host language. It is with this concept in mind that we seek to write code in Swift to discover the limits of how we can create an internal DSL, or in other words, does swift allow for declarative programming, or enough declarative programming to gain a result similar to examples from other languages such as Ruby.</p>
+<p>The task I have created is to generate a solution to a problem. The problem domain is a company desiring to move to a automated time sheet system, allowing staff to sign in and out easily, and to lessen the workload for payroll. This system would need allowances for managers to review and adjust the entries when necessary. However the commissioners of this problem are unsure how they would like to implement the automated timesheet system, so ideally they want something to be created that shows what the system will do, rather than how it will do it. </p>
+<p>This is a similar problem that Martin Flowler deals with, and the solution is present in the same manner as his in showing the process in making code, and syntax, as declarative as possible, and looking more like a custom syntax then the actual language we are programming with. Below is a state diagram representing the problem, and showing how this problem can be solved using a state machine in the first place!</p>
+<p><img alt="alt text" src="https://github.com/JamesTMoss/StateMachine/blob/master/diagram" /></p>
+<p>The below example is written with Java:</p>
+<pre><code class="java hljs ">    Event signOut = <span class="hljs-keyword">new</span> Event(<span class="hljs-string">"SGNOUT"</span>);
+    Event signIn = <span class="hljs-keyword">new</span> Event(<span class="hljs-string">"SGNIN"</span>);
+    Event approve = <span class="hljs-keyword">new</span> Event(<span class="hljs-string">"APPRV"</span>);
+
+    Command flag = <span class="hljs-keyword">new</span> Command(<span class="hljs-string">"FLAG"</span>);
+    Command record = <span class="hljs-keyword">new</span> Command(<span class="hljs-string">"RCRD"</span>);
+    Command adjustTimeStamp = <span class="hljs-keyword">new</span> Command(<span class="hljs-string">"ADJTS"</span>);
+    Command finalize = <span class="hljs-keyword">new</span> Command(<span class="hljs-string">"FNLZ"</span>);
+
+    State signedIn = <span class="hljs-keyword">new</span> State(<span class="hljs-string">"Signed In"</span>);
+    State signedOut = <span class="hljs-keyword">new</span> State(<span class="hljs-string">"Signed Out"</span>);
+    State pendingApproval = <span class="hljs-keyword">new</span> State(<span class="hljs-string">"Pending Approval"</span>);
+
+    StateMachine machine = <span class="hljs-keyword">new</span> StateMachine(signedOut);
+    signedOut.addTransition(signIn, signedIn);
+    signedOut.addAction(record);
+    signedOut.addAction(adjustTimeStamp);
+    signedIn.addTransition(signOut, pendingApproval);
+    signedIn.addAction(record);
+    signedIn.addAction(flag);
+    signedIn.addAction(adjustTimeStamp);
+    pendingApproval.addTransition(approve, signedOut);
+    pendingApproval.addAction(finalize);</code></pre>
+
+<p>This does not really represent a Declarative State Machine DSL, in fact it is hard to tell it is a configuration code for a state machine. The below code is written in JRuby, this is a far more declarative solution to the previous Java but is still considered an internal DSL.</p>
+<pre><code class=" hljs elixir">event <span class="hljs-symbol">:signOut</span>, <span class="hljs-string">"SGNOUT"</span>
+    event <span class="hljs-symbol">:signIn</span>, <span class="hljs-string">"SGNIN"</span>
+    event <span class="hljs-symbol">:approve</span>, <span class="hljs-string">"APPRV"</span>
+
+    command <span class="hljs-symbol">:flag</span>, <span class="hljs-string">"FLAG"</span>
+    command <span class="hljs-symbol">:record</span>, <span class="hljs-string">"RCRD"</span>
+    command <span class="hljs-symbol">:adjustTimeStamp</span>, <span class="hljs-string">"ADJTS"</span>
+    command <span class="hljs-symbol">:finalize</span>, <span class="hljs-string">"FNLZ"</span>
+
+    state <span class="hljs-symbol">:signedIn</span> <span class="hljs-keyword">do</span>
+        actions <span class="hljs-symbol">:record</span>, <span class="hljs-symbol">:adjustTimeStamp</span>, <span class="hljs-symbol">:flag</span>
+        transitions <span class="hljs-symbol">:signOut</span> -&gt; <span class="hljs-symbol">:pendingApproval</span>
+    <span class="hljs-keyword">end</span>
+
+    state <span class="hljs-symbol">:signedOut</span> <span class="hljs-keyword">do</span>
+        actions <span class="hljs-symbol">:record</span>, <span class="hljs-symbol">:adjustTimeStamp</span>
+        transitions <span class="hljs-symbol">:signIn</span> -&gt; <span class="hljs-symbol">:signedIn</span>
+    <span class="hljs-keyword">end</span>
+
+    state <span class="hljs-symbol">:pendingApproval</span> <span class="hljs-keyword">do</span>
+        actions <span class="hljs-symbol">:finalize</span>
+        transitions <span class="hljs-symbol">:approve</span> -&gt; <span class="hljs-symbol">:signedOut</span>
+    <span class="hljs-keyword">end</span></code></pre>
+
+<p>So we have something here we like the looks of. It is simple, readable, and is of limited expressiveness. This Looks far more like a DSL describing the configuration of a state machine now.</p>
+<h3 id="a-swift-solution">A Swift Solution</h3>
+<p>So we have seen a solution using Java, and even JRuby within Java. These solutions increasingly proving to be declarative solutions to our problem with creating an automated Timesheet system. The next step is to see if we can replicate these solutions using Swift and its syntax. Then if we can prove this we will want to progress further and see to what limit we can write a DSL in a declarative way, that is, show what we want the solution to be, rather than how we get the solution.</p>
+<p>There are a few ways to approach this, the easiest is with simple object method calls, which will turn out something like the original java code above. This is what I began with to create a base from which I could begin to remove as many side effects and limit its expressiveness to the point of either a similar solution that JRuby can achieve, or perhaps a great declaractive answer.</p>
+<pre><code class="swift hljs ">    <span class="hljs-keyword">let</span> arrive, depart, approve: <span class="hljs-type">Event</span>
+    <span class="hljs-keyword">let</span> record, finalise, flag, adjustTimeStamp: <span class="hljs-type">TimeSheetActions</span>
+    <span class="hljs-keyword">let</span> signedIn, signedOut, pendingApproval: <span class="hljs-type">State</span>
+    <span class="hljs-keyword">let</span> stateMachine: <span class="hljs-type">StateMachine</span>
+
+    <span class="hljs-keyword">init</span>() {
+        arrive =  <span class="hljs-type">Event</span>()           ; depart          = <span class="hljs-type">Event</span>()
+        approve = <span class="hljs-type">Event</span>()
+        record = <span class="hljs-type">TimeSheetActions</span>() ; finalize        = <span class="hljs-type">TimeSheetActions</span>() 
+        flag   = <span class="hljs-type">TimeSheetActions</span>() ; adjustTimeStamp = <span class="hljs-type">TimeSheetActions</span>()
+
+        signedIn        = <span class="hljs-type">State</span>(actions: [record, flag, adjustTimeStamp])
+        signedOut       = <span class="hljs-type">State</span>(actions: [record, adjustTimeStamp])
+        pendingApproval = <span class="hljs-type">State</span>(actions: [finalize])
+        <span class="hljs-keyword">let</span> signOn      = <span class="hljs-type">Transition</span>(event: arrive,  state: signedIn)
+        <span class="hljs-keyword">let</span> signOff     = <span class="hljs-type">Transition</span>(event: depart,  state: pendingApproval)
+        <span class="hljs-keyword">let</span> approval  = <span class="hljs-type">Transition</span>(event: approve, state: signedOut)
+        signedIn.addTransition(signOff)
+        signedOut.addTransition(signOn)
+        pendingApproval.addTransition(approval)
+
+        stateMachine = <span class="hljs-type">StateMachine</span>(states: [signedIn, signedOut, pendingApproval])
+        stateMachine.currentState = signedOut
+     }</code></pre>
+
+<p>This looks a little better than the java code, but it still isn't enough, it still does not look like a state machine. Each of the objects need to be declared and instantiated, which is not a very declarative at all. In this solution each of the states are instantiated with a set of actions that it can perform. Then the transitions are declared and instantiated using the events and states previously instantiated. Then these transitions are added to the states, with the states finally being added into the state machine, while also setting the initial state for it to start in. To try and create a more declarative solution we must try to remove the object declarations. </p>
+<p>I decided to pursue the use of enumeration's, and see how easily Swift allows you to implement them, and how powerful they are within this language. One of the reasons for choosing this method is that you can very easily set predefined values and constants using them. With Swift what this allows is to pass in types of enums given a set of value Types (i.e.. String, Int, enum) and distinguish them from any other set of values. In the instance below you can see the enum 'Config' and how it has set up the particular value types for each case.</p>
+<pre><code class="swift hljs ">    <span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">Config</span> </span>{
+         <span class="hljs-keyword">case</span> <span class="hljs-type">Transition</span>(<span class="hljs-type">Config</span>, <span class="hljs-type">Config</span>, <span class="hljs-type">Config</span>)
+         <span class="hljs-keyword">case</span> <span class="hljs-type">State</span>(<span class="hljs-type">String</span>, <span class="hljs-type">Config</span>)
+         <span class="hljs-keyword">case</span> <span class="hljs-type">Event</span>(<span class="hljs-type">String</span>)
+         <span class="hljs-keyword">case</span> <span class="hljs-type">Actions</span>([<span class="hljs-type">String</span>])
+     }
+
+     <span class="hljs-keyword">let</span> stateMachine: <span class="hljs-type">StateMachine</span>
+     <span class="hljs-keyword">init</span>() {
+         stateMachine = <span class="hljs-type">StateMachine</span>(<span class="hljs-type">StateMachineConfiguration</span>: [
+                 <span class="hljs-type">Config</span>.<span class="hljs-type">Transition</span>(<span class="hljs-type">Config</span>.<span class="hljs-type">State</span>(<span class="hljs-string">"signedIn"</span>,        <span class="hljs-type">Config</span>.<span class="hljs-type">Actions</span>([<span class="hljs-string">"record"</span>, <span class="hljs-string">"flag"</span>, <span class="hljs-string">"adjustTimeStamp"</span>])),
+                                   <span class="hljs-type">Config</span>.<span class="hljs-type">State</span>(<span class="hljs-string">"pendingApproval"</span>, <span class="hljs-type">Config</span>.<span class="hljs-type">Actions</span>([<span class="hljs-string">"finalise"</span>])),
+                                   <span class="hljs-type">Config</span>.<span class="hljs-type">Event</span>(<span class="hljs-string">"signOut"</span>)),
+                 <span class="hljs-type">Config</span>.<span class="hljs-type">Transition</span>(<span class="hljs-type">Config</span>.<span class="hljs-type">State</span>(<span class="hljs-string">"signedOut"</span>,       <span class="hljs-type">Config</span>.<span class="hljs-type">Actions</span>([<span class="hljs-string">"record"</span>, <span class="hljs-string">"finalise"</span>, <span class="hljs-string">"adjustTimeStamp"</span>])),
+                                   <span class="hljs-type">Config</span>.<span class="hljs-type">State</span>(<span class="hljs-string">"signedIn"</span>,        <span class="hljs-type">Config</span>.<span class="hljs-type">Actions</span>([])),
+                                   <span class="hljs-type">Config</span>.<span class="hljs-type">Event</span>(<span class="hljs-string">"signIn"</span>)),
+                 <span class="hljs-type">Config</span>.<span class="hljs-type">Transition</span>(<span class="hljs-type">Config</span>.<span class="hljs-type">State</span>(<span class="hljs-string">"pendingApproval"</span>, <span class="hljs-type">Config</span>.<span class="hljs-type">Actions</span>([])),
+                                   <span class="hljs-type">Config</span>.<span class="hljs-type">State</span>(<span class="hljs-string">"signedOut"</span>,       <span class="hljs-type">Config</span>.<span class="hljs-type">Actions</span>([])),
+                                   <span class="hljs-type">Config</span>.<span class="hljs-type">Event</span>(<span class="hljs-string">"approve"</span>))
+        ])
+     }</code></pre>
+
+<p>This use of enums have allowed us to create what looks like a custom syntax for configuration code. As you can see it is very readable, and looks much more like a DSL. However this is only the front end of the DSL, this is the language we have created to allow for very easy instantiation of a StateMachine. Below is some of the code that reads in the information passed into the StateMachine, and uses the enum to instantiate and create the actual objects from simple user input data.</p>
+<pre><code class="swift hljs ">     <span class="hljs-keyword">init</span>(<span class="hljs-type">StateMachineConfiguration</span>: [<span class="hljs-type">Config</span>]) {
+            <span class="hljs-keyword">for</span> transition <span class="hljs-keyword">in</span> <span class="hljs-type">StateMachineConfiguration</span> {
+                 <span class="hljs-keyword">switch</span> transition{
+                 <span class="hljs-keyword">case</span> .<span class="hljs-type">Transition</span>(<span class="hljs-keyword">let</span> startState, <span class="hljs-keyword">let</span> endState, <span class="hljs-keyword">let</span> event):
+                     <span class="hljs-keyword">var</span> startName, endName, eventName: <span class="hljs-type">String</span>
+                     <span class="hljs-keyword">switch</span> startState{
+                     <span class="hljs-keyword">case</span> .<span class="hljs-type">State</span>(<span class="hljs-keyword">let</span> stateName, <span class="hljs-keyword">let</span> <span class="hljs-type">Actions</span>):
+                         <span class="hljs-keyword">self</span>.addState(startState)
+                         startName = stateName
+                     }
+                     <span class="hljs-keyword">switch</span> endState{
+                     <span class="hljs-keyword">case</span> .<span class="hljs-type">State</span>(<span class="hljs-keyword">let</span> stateName, <span class="hljs-keyword">let</span> <span class="hljs-type">Actions</span>):
+                         <span class="hljs-keyword">self</span>.addState(endState)
+                         endName = stateName
+                     }
+
+                     <span class="hljs-keyword">switch</span> event {
+                     <span class="hljs-keyword">case</span> .<span class="hljs-type">Event</span>(<span class="hljs-keyword">let</span> eventID):
+                         <span class="hljs-keyword">var</span> newEvent = <span class="hljs-built_in">true</span>
+                         eventName = eventID
+                         <span class="hljs-keyword">for</span> e <span class="hljs-keyword">in</span> events { <span class="hljs-keyword">if</span> eventID == e.<span class="hljs-type">IDcode</span> { newEvent = <span class="hljs-built_in">false</span>} }
+                         <span class="hljs-keyword">if</span> newEvent {
+                             events.append(<span class="hljs-type">Event</span>(<span class="hljs-type">IDcode</span>: eventID))
+                         }
+                     }
+                     <span class="hljs-keyword">self</span>.getState(startName)!.setTransition(<span class="hljs-keyword">self</span>.getEvent(eventName)!, state: <span class="hljs-keyword">self</span>.getState(endName)!)
+                 }
+             }
+         }</code></pre>
+
+<p>In the above code you can see how the use of the enums has allowed us to separate easily the information provided in the initial configuration and then instantiate the objects. This particular block of code also checks to see if any repeat data has been put in so it does not create multiples of the objects. This method of using the enums has allowed us to write a custom syntax for our DSL, and a 'fake' parsing of the data to generate the code. For both users and programmers it is easy to read the syntax, and write in it, with very little side effects present. So this final solution feels far more declarative then our original swift attempt.</p>
+<p>In comparison to the JRuby code further above, we can see that the syntax we have created is quite different, though still very readable. The JRuby code in particular needs much less syntax in terms of writing the configuration code for the state machine. I feel that swifts reliance on the syntax (without writing a proper parser) is a possible drawback, it certainly looks configuration for a state machine, and can be understood as such through the use of enums.</p>
+<h3 id="conclusion">Conclusion</h3>
+<p>I have shown various solutions for the problem domain of an automated timesheet system using a Domain Specific Language, and how Swift has the capabilities to write a very declarative solution to this problem. In particular I presented a comparison point with Java and JRuby, and believe that without writing an actual parser I have demonstrated that Swift is able to compete with both languages as a declarative language while writing a DSL. This however is only one example of writing declarative code and should in no way mean that Swift can remain a declarative language writing in other declarative styles, as mentioned at the beginning of this article.</p>
+<p>I am interested to see how far swift can go in writing with other declarative mediums to tackle various problems, as this is only one problem that has been discussed here. In general I would describe swift as a very modern and versatile language that has a lot of potential. </p>
+<p><em>REALLY DONT KNOW WHAT ELSE TO PUT IN THE CONCLUSION, I FEEL MOST OF THE CONCLUSIONS I HAVE DRAWN ARE UNDER THE PREVIOUS HEADINGS.</em> </p>
+<h3 id="references">References</h3>
+<ul>
+<li>Martin Fowler, Rebecca Parsons. 2011. Domain Specific Languages.</li>
+<li><a href="https:// developer.apple.com/library/prerelease/ios/documentation/Swift/Conceptual/Swift_Programming_Language/" title="The Swift Programming Language Introduction">Apple's Introduction to the Swift Programming Language</a></li>
+<li><a href="en.wikipedia.og/w/index.php?title=Declarative_programming&amp;oldid=601621846" title="Declarative programming wiki">Wikipedia's description of Declarative programming (it's mostly correct)</a></li>
+<li><a href="www.sososwift.com" title="So So Swift">Swift Tutorial's</a></li>
+</ul>
