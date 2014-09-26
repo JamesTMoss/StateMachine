@@ -5,7 +5,7 @@ Declarative programming can be described as a paradigm, a style of building the 
    Several styles of programming, or forms of programming, exist that represent a declarative solution.
    
    - Constraint programming: Relations between variables are stated in the form of constraints, specifying the properties of a solution to be found.
-   - Domain Specific Languages: This is a computer language specialized to a particular application domain. This can take the form of either internal or external DSL's and therefor 		implemented with a wide variety of computing languages.
+   - Domain Specific Languages: This is a computer language specialized to a particular application domain. This can take the form of either internal or external DSL's and therefor implemented with a wide variety of computing languages.
    - Functional programming: This attempts to minimize of eliminate side effects.
    - Hybrid languages: These specify dependencies in a declarative fashion, but include imperative lists of actions to take as well. 
    - Logic programming: The specifics of how queries are answered is up to the implementation and its theorem prover. It typically takes the form of some sort of unification.
@@ -91,7 +91,8 @@ This does not really represent a Declarative State Machine DSL, in fact it is ha
     state <span class="hljs-symbol">:pendingApproval</span> <span class="hljs-keyword">do</span>
 	    actions <span class="hljs-symbol">:finalize</span>
 	    transitions <span class="hljs-symbol">:approve</span> -&gt; <span class="hljs-symbol">:signedOut</span>
-	<span class="hljs-keyword">end</span></code></pre>
+	<span class="hljs-keyword">end</span>
+</code></pre>
     
 
 	
@@ -129,7 +130,7 @@ There are a few ways to approach this, the easiest is with simple object method 
      }</code></pre>
 
 	 
- This looks a little better than the java code, but it still isn't enough, it still does not look like a state machine. Each of the objects need to be declared and instantiated, which is not a very declarative at all. In this solution each of the states are instantiated with a set of actions that it can perform. Then the transitions are declared and instantiated using the events and states previously instantiated. Then these transitions are added to the states, with the states finally being added into the state machine, while also setting the initial state for it to start in. To try and create a more declarative solution we must try to remove the object declarations. 
+This looks a little better than the java code, but it still isn't enough, it still does not look like a state machine. Each of the objects need to be declared and instantiated, which is not a very declarative at all. In this solution each of the states are instantiated with a set of actions that it can perform. Then the transitions are declared and instantiated using the events and states previously instantiated. Then these transitions are added to the states, with the states finally being added into the state machine, while also setting the initial state for it to start in. To try and create a more declarative solution we must try to remove the object declarations. 
 
 I decided to pursue the use of enumeration's, and see how easily Swift allows you to implement them, and how powerful they are within this language. One of the reasons for choosing this method is that you can very easily set predefined values and constants using them. With Swift what this allows is to pass in types of enums given a set of value Types (i.e.. String, Int, enum) and distinguish them from any other set of values. In the instance below you can see the enum 'Config' and how it has set up the particular value types for each case.
 	 
@@ -192,7 +193,36 @@ This use of enums have allowed us to create what looks like a custom syntax for 
          }</code></pre>
          
          
-In the above code you can see how the use of the enums has allowed us to separate easily the information provided in the initial configuration and then instantiate the objects. This particular block of code also checks to see if any repeat data has been put in so it does not create multiples of the objects. This method of using the enums has allowed us to write a custom syntax for our DSL, and a 'fake' parsing of the data to generate the code. For both users and programmers it is easy to read the syntax, and write in it, with very little side effects present. So this final solution feels far more declarative then our original swift attempt.
+In the above code you can see how the use of the enums has allowed us to separate easily the information provided in the initial configuration and then instantiate the objects. This particular block of code also checks to see if any repeat data has been put in so it does not create multiples of the objects. This method of using the enums has allowed us to write a custom syntax for our DSL, and a 'fake' parsing of the data to generate the code. For both users and programmers it is easy to read the syntax, and write in it, with very little side effects present. So this solution feels a little bit better then our original swift attempt. However it still does not read very well.
+
+Using the naming schemes and parameter syntax that swift enforces we can cleverly set out or program to maximize its usefulness.
+
+
+<!-- HTML generated using hilite.me --><div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #008800; font-weight: bold">let</span> stateMachine<span style="color: #333333">:</span> StateMachine
+    <span style="color: #008800; font-weight: bold">let</span> signedIn <span style="color: #333333">=</span> State()
+    <span style="color: #008800; font-weight: bold">let</span> signedOut <span style="color: #333333">=</span> State()
+    <span style="color: #008800; font-weight: bold">let</span> pendingApproval <span style="color: #333333">=</span> State()
+    
+    init() {
+        
+        signedIn.onEvent(<span style="background-color: #fff0f0">&quot;depart&quot;</span>,
+                         transitionTo<span style="color: #333333">:</span> pendingApproval,
+                         withActions<span style="color: #333333">:</span> <span style="background-color: #fff0f0">&quot;record&quot;</span>, <span style="background-color: #fff0f0">&quot;flag&quot;</span>, <span style="background-color: #fff0f0">&quot;adjustTimeStamp&quot;</span>
+        )
+        signedOut.onEvent(<span style="background-color: #fff0f0">&quot;arrive&quot;</span>,
+                          transitionTo<span style="color: #333333">:</span> signedIn,
+                          withActions<span style="color: #333333">:</span> <span style="background-color: #fff0f0">&quot;record&quot;</span>, <span style="background-color: #fff0f0">&quot;adjustTimeStamp&quot;</span>
+        )
+        pendingApproval.onEvent(<span style="background-color: #fff0f0">&quot;approve&quot;</span>,
+                                 transitionTo<span style="color: #333333">:</span> signedOut,
+                                 withActions<span style="color: #333333">:</span> <span style="background-color: #fff0f0">&quot;finalize&quot;</span>
+        )
+        stateMachine <span style="color: #333333">=</span> StateMachine(States<span style="color: #333333">:</span> signedIn, signedOut, pendingApproval)
+    }
+</pre></div>
+
+
+
 
 In comparison to the JRuby code further above, we can see that the syntax we have created is quite different, though still very readable. The JRuby code in particular needs much less syntax in terms of writing the configuration code for the state machine. I feel that swifts reliance on the syntax (without writing a proper parser) is a possible drawback, it certainly looks configuration for a state machine, and can be understood as such through the use of enums.
 	 

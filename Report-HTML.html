@@ -32,145 +32,190 @@
 <p><img alt="alt text" src="https://raw.githubusercontent.com/JamesTMoss/StateMachine/master/diagram.png" /></p>
 
 <p>The below example is written with Java:</p>
-<pre><code class="java hljs ">    Event signOut = <span class="hljs-keyword">new</span> Event(<span class="hljs-string">"SGNOUT"</span>);
-    Event signIn = <span class="hljs-keyword">new</span> Event(<span class="hljs-string">"SGNIN"</span>);
-    Event approve = <span class="hljs-keyword">new</span> Event(<span class="hljs-string">"APPRV"</span>);
 
-    Command flag = <span class="hljs-keyword">new</span> Command(<span class="hljs-string">"FLAG"</span>);
-    Command record = <span class="hljs-keyword">new</span> Command(<span class="hljs-string">"RCRD"</span>);
-    Command adjustTimeStamp = <span class="hljs-keyword">new</span> Command(<span class="hljs-string">"ADJTS"</span>);
-    Command finalize = <span class="hljs-keyword">new</span> Command(<span class="hljs-string">"FNLZ"</span>);
+<!-- HTML generated using hilite.me --><div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%">    Event signOut <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">new</span> Event<span style="color: #333333">(</span><span style="background-color: #fff0f0">&quot;SGNOUT&quot;</span><span style="color: #333333">);</span>
+    Event signIn <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">new</span> Event<span style="color: #333333">(</span><span style="background-color: #fff0f0">&quot;SGNIN&quot;</span><span style="color: #333333">);</span>
+    Event approve <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">new</span> Event<span style="color: #333333">(</span><span style="background-color: #fff0f0">&quot;APPRV&quot;</span><span style="color: #333333">);</span>
 
-    State signedIn = <span class="hljs-keyword">new</span> State(<span class="hljs-string">"Signed In"</span>);
-    State signedOut = <span class="hljs-keyword">new</span> State(<span class="hljs-string">"Signed Out"</span>);
-    State pendingApproval = <span class="hljs-keyword">new</span> State(<span class="hljs-string">"Pending Approval"</span>);
+    Command flag <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">new</span> Command<span style="color: #333333">(</span><span style="background-color: #fff0f0">&quot;FLAG&quot;</span><span style="color: #333333">);</span>
+    Command record <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">new</span> Command<span style="color: #333333">(</span><span style="background-color: #fff0f0">&quot;RCRD&quot;</span><span style="color: #333333">);</span>
+    Command adjustTimeStamp <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">new</span> Command<span style="color: #333333">(</span><span style="background-color: #fff0f0">&quot;ADJTS&quot;</span><span style="color: #333333">);</span>
+    Command finalize <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">new</span> Command<span style="color: #333333">(</span><span style="background-color: #fff0f0">&quot;FNLZ&quot;</span><span style="color: #333333">);</span>
 
-    StateMachine machine = <span class="hljs-keyword">new</span> StateMachine(signedOut);
-    signedOut.addTransition(signIn, signedIn);
-    signedOut.addAction(record);
-    signedOut.addAction(adjustTimeStamp);
-    signedIn.addTransition(signOut, pendingApproval);
-    signedIn.addAction(record);
-    signedIn.addAction(flag);
-    signedIn.addAction(adjustTimeStamp);
-    pendingApproval.addTransition(approve, signedOut);
-    pendingApproval.addAction(finalize);</code></pre>
+    State signedIn <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">new</span> State<span style="color: #333333">(</span><span style="background-color: #fff0f0">&quot;Signed In&quot;</span><span style="color: #333333">);</span>
+    State signedOut <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">new</span> State<span style="color: #333333">(</span><span style="background-color: #fff0f0">&quot;Signed Out&quot;</span><span style="color: #333333">);</span>
+    State pendingApproval <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">new</span> State<span style="color: #333333">(</span><span style="background-color: #fff0f0">&quot;Pending Approval&quot;</span><span style="color: #333333">);</span>
+
+    StateMachine machine <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">new</span> StateMachine<span style="color: #333333">(</span>signedOut<span style="color: #333333">);</span>
+    signedOut<span style="color: #333333">.</span><span style="color: #0000CC">addTransition</span><span style="color: #333333">(</span>signIn<span style="color: #333333">,</span> signedIn<span style="color: #333333">);</span>
+    signedOut<span style="color: #333333">.</span><span style="color: #0000CC">addAction</span><span style="color: #333333">(</span>record<span style="color: #333333">);</span>
+    signedOut<span style="color: #333333">.</span><span style="color: #0000CC">addAction</span><span style="color: #333333">(</span>adjustTimeStamp<span style="color: #333333">);</span>
+    signedIn<span style="color: #333333">.</span><span style="color: #0000CC">addTransition</span><span style="color: #333333">(</span>signOut<span style="color: #333333">,</span> pendingApproval<span style="color: #333333">);</span>
+    signedIn<span style="color: #333333">.</span><span style="color: #0000CC">addAction</span><span style="color: #333333">(</span>record<span style="color: #333333">);</span>
+    signedIn<span style="color: #333333">.</span><span style="color: #0000CC">addAction</span><span style="color: #333333">(</span>flag<span style="color: #333333">);</span>
+    signedIn<span style="color: #333333">.</span><span style="color: #0000CC">addAction</span><span style="color: #333333">(</span>adjustTimeStamp<span style="color: #333333">);</span>
+    pendingApproval<span style="color: #333333">.</span><span style="color: #0000CC">addTransition</span><span style="color: #333333">(</span>approve<span style="color: #333333">,</span> signedOut<span style="color: #333333">);</span>
+    pendingApproval<span style="color: #333333">.</span><span style="color: #0000CC">addAction</span><span style="color: #333333">(</span>finalize<span style="color: #333333">);</span>
+</pre></div>
+
+
 
 <p>This does not really represent a Declarative State Machine DSL, in fact it is hard to tell it is a configuration code for a state machine. The below code is written in JRuby, this is a far more declarative solution to the previous Java but is still considered an internal DSL.</p>
-<pre><code class=" hljs elixir">event <span class="hljs-symbol">:signOut</span>, <span class="hljs-string">"SGNOUT"</span>
-    event <span class="hljs-symbol">:signIn</span>, <span class="hljs-string">"SGNIN"</span>
-    event <span class="hljs-symbol">:approve</span>, <span class="hljs-string">"APPRV"</span>
 
-    command <span class="hljs-symbol">:flag</span>, <span class="hljs-string">"FLAG"</span>
-    command <span class="hljs-symbol">:record</span>, <span class="hljs-string">"RCRD"</span>
-    command <span class="hljs-symbol">:adjustTimeStamp</span>, <span class="hljs-string">"ADJTS"</span>
-    command <span class="hljs-symbol">:finalize</span>, <span class="hljs-string">"FNLZ"</span>
+<!-- HTML generated using hilite.me --><div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%">    event <span style="color: #333333">:</span>signOut, <span style="background-color: #fff0f0">&quot;SGNOUT&quot;</span>
+    event <span style="color: #333333">:</span>signIn, <span style="background-color: #fff0f0">&quot;SGNIN&quot;</span>
+    event <span style="color: #333333">:</span>approve, <span style="background-color: #fff0f0">&quot;APPRV&quot;</span>
 
-    state <span class="hljs-symbol">:signedIn</span> <span class="hljs-keyword">do</span>
-        actions <span class="hljs-symbol">:record</span>, <span class="hljs-symbol">:adjustTimeStamp</span>, <span class="hljs-symbol">:flag</span>
-        transitions <span class="hljs-symbol">:signOut</span> -&gt; <span class="hljs-symbol">:pendingApproval</span>
-    <span class="hljs-keyword">end</span>
+    command <span style="color: #333333">:</span>flag, <span style="background-color: #fff0f0">&quot;FLAG&quot;</span>
+    command <span style="color: #333333">:</span>record, <span style="background-color: #fff0f0">&quot;RCRD&quot;</span>
+    command <span style="color: #333333">:</span>adjustTimeStamp, <span style="background-color: #fff0f0">&quot;ADJTS&quot;</span>
+    command <span style="color: #333333">:</span>finalize, <span style="background-color: #fff0f0">&quot;FNLZ&quot;</span>
 
-    state <span class="hljs-symbol">:signedOut</span> <span class="hljs-keyword">do</span>
-        actions <span class="hljs-symbol">:record</span>, <span class="hljs-symbol">:adjustTimeStamp</span>
-        transitions <span class="hljs-symbol">:signIn</span> -&gt; <span class="hljs-symbol">:signedIn</span>
-    <span class="hljs-keyword">end</span>
+    state <span style="color: #333333">:</span>signedIn <span style="color: #008800; font-weight: bold">do</span>
+        actions <span style="color: #333333">:</span>record, <span style="color: #333333">:</span>adjustTimeStamp, <span style="color: #333333">:</span>flag
+        transitions <span style="color: #333333">:</span>signOut <span style="color: #333333">-&gt;</span> <span style="color: #333333">:</span>pendingApproval
+    end
 
-    state <span class="hljs-symbol">:pendingApproval</span> <span class="hljs-keyword">do</span>
-        actions <span class="hljs-symbol">:finalize</span>
-        transitions <span class="hljs-symbol">:approve</span> -&gt; <span class="hljs-symbol">:signedOut</span>
-    <span class="hljs-keyword">end</span></code></pre>
+    state <span style="color: #333333">:</span>signedOut <span style="color: #008800; font-weight: bold">do</span>
+        actions <span style="color: #333333">:</span>record, <span style="color: #333333">:</span>adjustTimeStamp
+        transitions <span style="color: #333333">:</span>signIn <span style="color: #333333">-&gt;</span> <span style="color: #333333">:</span>signedIn
+    end
+
+    state <span style="color: #333333">:</span>pendingApproval <span style="color: #008800; font-weight: bold">do</span>
+        actions <span style="color: #333333">:</span>finalize
+        transitions <span style="color: #333333">:</span>approve <span style="color: #333333">-&gt;</span> <span style="color: #333333">:</span>signedOut
+    end
+</pre></div>
+
+
 
 <p>So we have something here we like the looks of. It is simple, readable, and is of limited expressiveness. This Looks far more like a DSL describing the configuration of a state machine now.</p>
 <h3 id="a-swift-solution">A Swift Solution</h3>
 <p>So we have seen a solution using Java, and even JRuby within Java. These solutions increasingly proving to be declarative solutions to our problem with creating an automated Timesheet system. The next step is to see if we can replicate these solutions using Swift and its syntax. Then if we can prove this we will want to progress further and see to what limit we can write a DSL in a declarative way, that is, show what we want the solution to be, rather than how we get the solution.</p>
 <p>There are a few ways to approach this, the easiest is with simple object method calls, which will turn out something like the original java code above. This is what I began with to create a base from which I could begin to remove as many side effects and limit its expressiveness to the point of either a similar solution that JRuby can achieve, or perhaps a great declaractive answer.</p>
-<pre><code class="swift hljs ">    <span class="hljs-keyword">let</span> arrive, depart, approve: <span class="hljs-type">Event</span>
-    <span class="hljs-keyword">let</span> record, finalise, flag, adjustTimeStamp: <span class="hljs-type">TimeSheetActions</span>
-    <span class="hljs-keyword">let</span> signedIn, signedOut, pendingApproval: <span class="hljs-type">State</span>
-    <span class="hljs-keyword">let</span> stateMachine: <span class="hljs-type">StateMachine</span>
 
-    <span class="hljs-keyword">init</span>() {
-        arrive =  <span class="hljs-type">Event</span>()           ; depart          = <span class="hljs-type">Event</span>()
-        approve = <span class="hljs-type">Event</span>()
-        record = <span class="hljs-type">TimeSheetActions</span>() ; finalize        = <span class="hljs-type">TimeSheetActions</span>() 
-        flag   = <span class="hljs-type">TimeSheetActions</span>() ; adjustTimeStamp = <span class="hljs-type">TimeSheetActions</span>()
+<!-- HTML generated using hilite.me --><div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%">    <span style="color: #008800; font-weight: bold">let</span> arrive, depart, approve<span style="color: #333333">:</span> Event
+    <span style="color: #008800; font-weight: bold">let</span> record, finalise, flag, adjustTimeStamp<span style="color: #333333">:</span> TimeSheetActions
+    <span style="color: #008800; font-weight: bold">let</span> signedIn, signedOut, pendingApproval<span style="color: #333333">:</span> State
+    <span style="color: #008800; font-weight: bold">let</span> stateMachine<span style="color: #333333">:</span> StateMachine
 
-        signedIn        = <span class="hljs-type">State</span>(actions: [record, flag, adjustTimeStamp])
-        signedOut       = <span class="hljs-type">State</span>(actions: [record, adjustTimeStamp])
-        pendingApproval = <span class="hljs-type">State</span>(actions: [finalize])
-        <span class="hljs-keyword">let</span> signOn      = <span class="hljs-type">Transition</span>(event: arrive,  state: signedIn)
-        <span class="hljs-keyword">let</span> signOff     = <span class="hljs-type">Transition</span>(event: depart,  state: pendingApproval)
-        <span class="hljs-keyword">let</span> approval  = <span class="hljs-type">Transition</span>(event: approve, state: signedOut)
+    init() {
+        arrive <span style="color: #333333">=</span>  Event()           ; depart          <span style="color: #333333">=</span> Event()
+        approve <span style="color: #333333">=</span> Event()
+        record <span style="color: #333333">=</span> TimeSheetActions() ; finalize        <span style="color: #333333">=</span> TimeSheetActions() 
+        flag   <span style="color: #333333">=</span> TimeSheetActions() ; adjustTimeStamp <span style="color: #333333">=</span> TimeSheetActions()
+
+        signedIn        <span style="color: #333333">=</span> State(actions<span style="color: #333333">:</span> [record, flag, adjustTimeStamp])
+        signedOut       <span style="color: #333333">=</span> State(actions<span style="color: #333333">:</span> [record, adjustTimeStamp])
+        pendingApproval <span style="color: #333333">=</span> State(actions<span style="color: #333333">:</span> [finalize])
+        <span style="color: #008800; font-weight: bold">let</span> signOn      <span style="color: #333333">=</span> Transition(event<span style="color: #333333">:</span> arrive,  state<span style="color: #333333">:</span> signedIn)
+        <span style="color: #008800; font-weight: bold">let</span> signOff     <span style="color: #333333">=</span> Transition(event<span style="color: #333333">:</span> depart,  state<span style="color: #333333">:</span> pendingApproval)
+        <span style="color: #008800; font-weight: bold">let</span> approval  <span style="color: #333333">=</span> Transition(event<span style="color: #333333">:</span> approve, state<span style="color: #333333">:</span> signedOut)
         signedIn.addTransition(signOff)
         signedOut.addTransition(signOn)
         pendingApproval.addTransition(approval)
 
-        stateMachine = <span class="hljs-type">StateMachine</span>(states: [signedIn, signedOut, pendingApproval])
-        stateMachine.currentState = signedOut
-     }</code></pre>
+        stateMachine <span style="color: #333333">=</span> StateMachine(states<span style="color: #333333">:</span> [signedIn, signedOut, pendingApproval])
+        stateMachine.currentState <span style="color: #333333">=</span> signedOut
+     }
+</pre></div>
+
+
 
 <p>This looks a little better than the java code, but it still isn't enough, it still does not look like a state machine. Each of the objects need to be declared and instantiated, which is not a very declarative at all. In this solution each of the states are instantiated with a set of actions that it can perform. Then the transitions are declared and instantiated using the events and states previously instantiated. Then these transitions are added to the states, with the states finally being added into the state machine, while also setting the initial state for it to start in. To try and create a more declarative solution we must try to remove the object declarations. </p>
 <p>I decided to pursue the use of enumeration's, and see how easily Swift allows you to implement them, and how powerful they are within this language. One of the reasons for choosing this method is that you can very easily set predefined values and constants using them. With Swift what this allows is to pass in types of enums given a set of value Types (i.e.. String, Int, enum) and distinguish them from any other set of values. In the instance below you can see the enum 'Config' and how it has set up the particular value types for each case.</p>
-<pre><code class="swift hljs ">    <span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">Config</span> </span>{
-         <span class="hljs-keyword">case</span> <span class="hljs-type">Transition</span>(<span class="hljs-type">Config</span>, <span class="hljs-type">Config</span>, <span class="hljs-type">Config</span>)
-         <span class="hljs-keyword">case</span> <span class="hljs-type">State</span>(<span class="hljs-type">String</span>, <span class="hljs-type">Config</span>)
-         <span class="hljs-keyword">case</span> <span class="hljs-type">Event</span>(<span class="hljs-type">String</span>)
-         <span class="hljs-keyword">case</span> <span class="hljs-type">Actions</span>([<span class="hljs-type">String</span>])
+
+<!-- HTML generated using hilite.me --><div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%">     <span style="color: #008800; font-weight: bold">enum</span> Config {
+         case Transition(Config, Config, Config)
+         case State(String, Config)
+         case Event(String)
+         case Actions([String])
      }
 
-     <span class="hljs-keyword">let</span> stateMachine: <span class="hljs-type">StateMachine</span>
-     <span class="hljs-keyword">init</span>() {
-         stateMachine = <span class="hljs-type">StateMachine</span>(<span class="hljs-type">StateMachineConfiguration</span>: [
-                 <span class="hljs-type">Config</span>.<span class="hljs-type">Transition</span>(<span class="hljs-type">Config</span>.<span class="hljs-type">State</span>(<span class="hljs-string">"signedIn"</span>,        <span class="hljs-type">Config</span>.<span class="hljs-type">Actions</span>([<span class="hljs-string">"record"</span>, <span class="hljs-string">"flag"</span>, <span class="hljs-string">"adjustTimeStamp"</span>])),
-                                   <span class="hljs-type">Config</span>.<span class="hljs-type">State</span>(<span class="hljs-string">"pendingApproval"</span>, <span class="hljs-type">Config</span>.<span class="hljs-type">Actions</span>([<span class="hljs-string">"finalise"</span>])),
-                                   <span class="hljs-type">Config</span>.<span class="hljs-type">Event</span>(<span class="hljs-string">"signOut"</span>)),
-                 <span class="hljs-type">Config</span>.<span class="hljs-type">Transition</span>(<span class="hljs-type">Config</span>.<span class="hljs-type">State</span>(<span class="hljs-string">"signedOut"</span>,       <span class="hljs-type">Config</span>.<span class="hljs-type">Actions</span>([<span class="hljs-string">"record"</span>, <span class="hljs-string">"finalise"</span>, <span class="hljs-string">"adjustTimeStamp"</span>])),
-                                   <span class="hljs-type">Config</span>.<span class="hljs-type">State</span>(<span class="hljs-string">"signedIn"</span>,        <span class="hljs-type">Config</span>.<span class="hljs-type">Actions</span>([])),
-                                   <span class="hljs-type">Config</span>.<span class="hljs-type">Event</span>(<span class="hljs-string">"signIn"</span>)),
-                 <span class="hljs-type">Config</span>.<span class="hljs-type">Transition</span>(<span class="hljs-type">Config</span>.<span class="hljs-type">State</span>(<span class="hljs-string">"pendingApproval"</span>, <span class="hljs-type">Config</span>.<span class="hljs-type">Actions</span>([])),
-                                   <span class="hljs-type">Config</span>.<span class="hljs-type">State</span>(<span class="hljs-string">"signedOut"</span>,       <span class="hljs-type">Config</span>.<span class="hljs-type">Actions</span>([])),
-                                   <span class="hljs-type">Config</span>.<span class="hljs-type">Event</span>(<span class="hljs-string">"approve"</span>))
+     <span style="color: #008800; font-weight: bold">let</span> stateMachine<span style="color: #333333">:</span> StateMachine
+     init() {
+         stateMachine <span style="color: #333333">=</span> StateMachine(StateMachineConfiguration<span style="color: #333333">:</span> [
+                 Config.Transition(Config.State(<span style="background-color: #fff0f0">&quot;signedIn&quot;</span>,        Config.Actions([<span style="background-color: #fff0f0">&quot;record&quot;</span>, <span style="background-color: #fff0f0">&quot;flag&quot;</span>, <span style="background-color: #fff0f0">&quot;adjustTimeStamp&quot;</span>])),
+                                   Config.State(<span style="background-color: #fff0f0">&quot;pendingApproval&quot;</span>, Config.Actions([<span style="background-color: #fff0f0">&quot;finalise&quot;</span>])),
+                                   Config.Event(<span style="background-color: #fff0f0">&quot;signOut&quot;</span>)),
+                 Config.Transition(Config.State(<span style="background-color: #fff0f0">&quot;signedOut&quot;</span>,       Config.Actions([<span style="background-color: #fff0f0">&quot;record&quot;</span>, <span style="background-color: #fff0f0">&quot;finalise&quot;</span>, <span style="background-color: #fff0f0">&quot;adjustTimeStamp&quot;</span>])),
+                                   Config.State(<span style="background-color: #fff0f0">&quot;signedIn&quot;</span>,        Config.Actions([])),
+                                   Config.Event(<span style="background-color: #fff0f0">&quot;signIn&quot;</span>)),
+                 Config.Transition(Config.State(<span style="background-color: #fff0f0">&quot;pendingApproval&quot;</span>, Config.Actions([])),
+                                   Config.State(<span style="background-color: #fff0f0">&quot;signedOut&quot;</span>,       Config.Actions([])),
+                                   Config.Event(<span style="background-color: #fff0f0">&quot;approve&quot;</span>))
         ])
-     }</code></pre>
+     }
+</pre></div>
+
 
 <p>This use of enums have allowed us to create what looks like a custom syntax for configuration code. As you can see it is very readable, and looks much more like a DSL. However this is only the front end of the DSL, this is the language we have created to allow for very easy instantiation of a StateMachine. Below is some of the code that reads in the information passed into the StateMachine, and uses the enum to instantiate and create the actual objects from simple user input data.</p>
-<pre><code class="swift hljs ">     <span class="hljs-keyword">init</span>(<span class="hljs-type">StateMachineConfiguration</span>: [<span class="hljs-type">Config</span>]) {
-            <span class="hljs-keyword">for</span> transition <span class="hljs-keyword">in</span> <span class="hljs-type">StateMachineConfiguration</span> {
-                 <span class="hljs-keyword">switch</span> transition{
-                 <span class="hljs-keyword">case</span> .<span class="hljs-type">Transition</span>(<span class="hljs-keyword">let</span> startState, <span class="hljs-keyword">let</span> endState, <span class="hljs-keyword">let</span> event):
-                     <span class="hljs-keyword">var</span> startName, endName, eventName: <span class="hljs-type">String</span>
-                     <span class="hljs-keyword">switch</span> startState{
-                     <span class="hljs-keyword">case</span> .<span class="hljs-type">State</span>(<span class="hljs-keyword">let</span> stateName, <span class="hljs-keyword">let</span> <span class="hljs-type">Actions</span>):
-                         <span class="hljs-keyword">self</span>.addState(startState)
-                         startName = stateName
+
+<!-- HTML generated using hilite.me --><div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%">     init(StateMachineConfiguration<span style="color: #333333">:</span> [Config]) {
+            <span style="color: #008800; font-weight: bold">for</span> transition in StateMachineConfiguration {
+                 switch transition{
+                 case .Transition(<span style="color: #008800; font-weight: bold">let</span> startState, <span style="color: #008800; font-weight: bold">let</span> endState, <span style="color: #008800; font-weight: bold">let</span> event)<span style="color: #333333">:</span>
+                     var startName, endName, eventName<span style="color: #333333">:</span> String
+                     switch startState{
+                     case .State(<span style="color: #008800; font-weight: bold">let</span> stateName, <span style="color: #008800; font-weight: bold">let</span> Actions)<span style="color: #333333">:</span>
+                         self.addState(startState)
+                         startName <span style="color: #333333">=</span> stateName
                      }
-                     <span class="hljs-keyword">switch</span> endState{
-                     <span class="hljs-keyword">case</span> .<span class="hljs-type">State</span>(<span class="hljs-keyword">let</span> stateName, <span class="hljs-keyword">let</span> <span class="hljs-type">Actions</span>):
-                         <span class="hljs-keyword">self</span>.addState(endState)
-                         endName = stateName
+                     switch endState{
+                     case .State(<span style="color: #008800; font-weight: bold">let</span> stateName, <span style="color: #008800; font-weight: bold">let</span> Actions)<span style="color: #333333">:</span>
+                         self.addState(endState)
+                         endName <span style="color: #333333">=</span> stateName
                      }
 
-                     <span class="hljs-keyword">switch</span> event {
-                     <span class="hljs-keyword">case</span> .<span class="hljs-type">Event</span>(<span class="hljs-keyword">let</span> eventID):
-                         <span class="hljs-keyword">var</span> newEvent = <span class="hljs-built_in">true</span>
-                         eventName = eventID
-                         <span class="hljs-keyword">for</span> e <span class="hljs-keyword">in</span> events { <span class="hljs-keyword">if</span> eventID == e.<span class="hljs-type">IDcode</span> { newEvent = <span class="hljs-built_in">false</span>} }
-                         <span class="hljs-keyword">if</span> newEvent {
-                             events.append(<span class="hljs-type">Event</span>(<span class="hljs-type">IDcode</span>: eventID))
+                     switch event {
+                     case .Event(<span style="color: #008800; font-weight: bold">let</span> eventID)<span style="color: #333333">:</span>
+                         var newEvent <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">true</span>
+                         eventName <span style="color: #333333">=</span> eventID
+                         <span style="color: #008800; font-weight: bold">for</span> e in events { <span style="color: #008800; font-weight: bold">if</span> eventID <span style="color: #333333">==</span> e.IDcode { newEvent <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">false</span>} }
+                         <span style="color: #008800; font-weight: bold">if</span> newEvent {
+                             events.append(Event(IDcode<span style="color: #333333">:</span> eventID))
                          }
                      }
-                     <span class="hljs-keyword">self</span>.getState(startName)!.setTransition(<span class="hljs-keyword">self</span>.getEvent(eventName)!, state: <span class="hljs-keyword">self</span>.getState(endName)!)
+                     self.getState(startName)<span style="color: #333333">!</span>.setTransition(self.getEvent(eventName)<span style="color: #333333">!</span>, state<span style="color: #333333">:</span> self.getState(endName)<span style="color: #333333">!</span>)
                  }
              }
-         }</code></pre>
+         }
+</pre></div>
 
-<p>In the above code you can see how the use of the enums has allowed us to separate easily the information provided in the initial configuration and then instantiate the objects. This particular block of code also checks to see if any repeat data has been put in so it does not create multiples of the objects. This method of using the enums has allowed us to write a custom syntax for our DSL, and a 'fake' parsing of the data to generate the code. For both users and programmers it is easy to read the syntax, and write in it, with very little side effects present. So this final solution feels far more declarative then our original swift attempt.</p>
-<p>In comparison to the JRuby code further above, we can see that the syntax we have created is quite different, though still very readable. The JRuby code in particular needs much less syntax in terms of writing the configuration code for the state machine. I feel that swifts reliance on the syntax (without writing a proper parser) is a possible drawback, it certainly looks configuration for a state machine, and can be understood as such through the use of enums.</p>
+<p>In the above code you can see how the use of the enums has allowed us to separate easily the information provided in the initial configuration and then instantiate the objects. This particular block of code also checks to see if any repeat data has been put in so it does not create multiples of the objects. This method of using the enums has allowed us to write a custom syntax for our DSL, and a 'fake' parsing of the data to generate the code. For both users and programmers it is easy to read the syntax, and write in it, with very little side effects present. So this solution feels a little bit better then our original swift attempt. However it still does not read very well.</p>
+
+<p>Using the naming schemes and parameter syntax that swift enforces we can cleverly set out or program to maximize its usefulness.</p>
+
+<!-- HTML generated using hilite.me --><div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%">
+    <span style="color: #008800; font-weight: bold">let</span> stateMachine<span style="color: #333333">:</span> StateMachine
+    <span style="color: #008800; font-weight: bold">let</span> signedIn <span style="color: #333333">=</span> State()
+    <span style="color: #008800; font-weight: bold">let</span> signedOut <span style="color: #333333">=</span> State()
+    <span style="color: #008800; font-weight: bold">let</span> pendingApproval <span style="color: #333333">=</span> State()
+    
+    init() {
+        
+        signedIn.onEvent(<span style="background-color: #fff0f0">&quot;depart&quot;</span>,
+                         transitionTo<span style="color: #333333">:</span> pendingApproval,
+                         withActions<span style="color: #333333">:</span> <span style="background-color: #fff0f0">&quot;record&quot;</span>, <span style="background-color: #fff0f0">&quot;flag&quot;</span>, <span style="background-color: #fff0f0">&quot;adjustTimeStamp&quot;</span>
+        )
+        signedOut.onEvent(<span style="background-color: #fff0f0">&quot;arrive&quot;</span>,
+                          transitionTo<span style="color: #333333">:</span> signedIn,
+                          withActions<span style="color: #333333">:</span> <span style="background-color: #fff0f0">&quot;record&quot;</span>, <span style="background-color: #fff0f0">&quot;adjustTimeStamp&quot;</span>
+        )
+        pendingApproval.onEvent(<span style="background-color: #fff0f0">&quot;approve&quot;</span>,
+                                 transitionTo<span style="color: #333333">:</span> signedOut,
+                                 withActions<span style="color: #333333">:</span> <span style="background-color: #fff0f0">&quot;finalize&quot;</span>
+        )
+        stateMachine <span style="color: #333333">=</span> StateMachine(States<span style="color: #333333">:</span> signedIn, signedOut, pendingApproval)
+    }
+</pre></div>
+
+
+<p>In comparison to the JRuby code further above, we can see that the syntax we have created is quite different, though still very readable. In fact by using the enforced syntax of swift we can create something quite declarative, this was also accomplished without the use of anything fancy like enums or structs. The only disadvantage to this particular solution is that some variables had to be declared prior to initialization.   </p>
 <h3 id="conclusion">Conclusion</h3>
-<p>I have shown various solutions for the problem domain of an automated timesheet system using a Domain Specific Language, and how Swift has the capabilities to write a very declarative solution to this problem. In particular I presented a comparison point with Java and JRuby, and believe that without writing an actual parser I have demonstrated that Swift is able to compete with both languages as a declarative language while writing a DSL. This however is only one example of writing declarative code and should in no way mean that Swift can remain a declarative language writing in other declarative styles, as mentioned at the beginning of this article.</p>
+<p>I have shown various solutions for the problem domain of an automated timesheet system using a Domain Specific Language, and how Swift has the capabilities to write a relatively declarative solution to this problem. In particular I presented a comparison point with Java and JRuby, and believe that without writing an actual parser I have demonstrated that Swift is able to be utilized as a declarative language while writing a DSL. This however is only one example of writing declarative code and should in no way mean that Swift can remain a declarative language writing in other declarative styles, as mentioned at the beginning of this article.</p>
 <p>I am interested to see how far swift can go in writing with other declarative mediums to tackle various problems, as this is only one problem that has been discussed here. In general I would describe swift as a very modern and versatile language that has a lot of potential. </p>
-<p><em>REALLY DONT KNOW WHAT ELSE TO PUT IN THE CONCLUSION, I FEEL MOST OF THE CONCLUSIONS I HAVE DRAWN ARE UNDER THE PREVIOUS HEADINGS.</em> </p>
+
 <h3 id="references">References</h3>
 <ul>
 <li>Martin Fowler, Rebecca Parsons. 2011. Domain Specific Languages.</li>
